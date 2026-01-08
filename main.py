@@ -2,12 +2,44 @@ import random
 import requests
 from bs4 import BeautifulSoup
 import sys
+import re
+import os
+from dotenv import load_dotenv
+import requests
+
+load_dotenv() 
+
+def get_poster_tmdb(movie_title, year=None):
+    API_KEY = os.getenv("TMDB_API_KEY")
+    base_url = "https://api.themoviedb.org/3/search/movie"
+
+    params = {
+        "api_key": API_KEY,
+        "query": movie_title,
+        "year": year
+    }
+
+    try:
+        response = requests.get(base_url, params=params, timeout=5000,)
+        response.raise_for_status()  # valida erro HTTPs
+        data = response.json()
+
+        if data.get("results"):
+            poster_path = data["results"][0].get("poster_path")
+            if poster_path:
+                return f"https://image.tmdb.org/t/p/w500{poster_path}"
+
+    except requests.exceptions.RequestException as e:
+        print(f"Erro ao buscar poster no TMDB: {e}")
+
+    return None  # fallback
+
 
 def getMovieList(url):
     try:
         response = requests.get(url, timeout=10)
         soup = BeautifulSoup(response.text, "html.parser")
-        return soup.select('li.poster-container')
+        return soup.select('div.react-component')
     except requests.exceptions.RequestException as e:
         print(f"❌ Erro ao acessar {url}: {e}")
         return []
@@ -16,17 +48,20 @@ def getByWatchlist(username):
     return f'https://letterboxd.com/{username}/watchlist/'
 
 def getUrl():
-    return f'https://letterboxd.com/films/ajax/page/{random.randint(0,20)}'
+    return f'https://letterboxd.com/films/ajax/page/{random.randint(0,5)}'
 
 
 def getMovie(movielist):
     index = random.randint(0, len(movielist) - 1)
     filme = movielist[index]
-    title = filme.img.get('alt')
-    poster_div = filme.find('div', class_='film-poster')
-    url = "https://letterboxd.com/film/" + poster_div.get('data-film-slug')
+    title = filme.get('data-item-name')
+    url = "https://letterboxd.com" + filme.get('data-item-link')
+    year = re.sub('[^0-9]', '', title)
+    text_only = title.split(' (')[0]
+    img = get_poster_tmdb(text_only , year)
+    
     del movielist[index]
-    return title, url
+    return title, url, img
 
 def ask(msg):
     res = ''
@@ -36,8 +71,8 @@ def ask(msg):
            
 def recomendar(movielist):
     while movielist: # enquanto houver filmes na lista
-        title, url = getMovie(movielist)
-        print(f"\nFilme: {title}\nAcesse:{url}\n")
+        title, url, img = getMovie(movielist)
+        print(f"\nFilme: {title}\nAcesse:{url}\nPoster: {img}\n")
         if(ask("Você vai assistir esse filme? Se não vou te recomendar outro!")):
             print("Bom filme")
             sys.exit() 
