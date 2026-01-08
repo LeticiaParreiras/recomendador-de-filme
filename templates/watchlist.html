@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Recomendador de Filme</title>
+</head>
+<body>
+
+<img id="poster" src="" alt="">
+<h1 id="title"></h1>
+
+<script>
+    const movielist = {{ movielist | tojson }};
+
+    fetch('/recommend', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ movielist })
+    })
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById('poster').src = data.img;
+        document.getElementById('title').innerText = data.title;
+    })
+    .catch(err => console.error(err));
+</script>
+
+</body>
+</html>

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recomendador de filme</title>
+</head>
+<body>
+    <h1>Recomendador de Filme</h1>
+    <button>Recomendar Filme aleatório</button>
+    <button onclick=watchlist()>Recomendar Filme da minha watchlist</button>
+</body>
+</html>
+<script>
+    function watchlist(){
+        const user = window.prompt("Atenção! Essa opção funciona apenas se: \n1.Você tiver uma conta no Letterboxd.\n2.Sua Watchlist estiver pública e com filmes adicionados. Informe seu user")
+        window.location.href = `/watchlist/${user}`
+    }
+</script>
