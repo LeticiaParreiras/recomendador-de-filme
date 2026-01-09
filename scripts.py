@@ -67,12 +67,10 @@ def getUrl():
 
 def getMovie(movielist):
     index = random.randint(0, len(movielist) - 1)
-    filme = movielist[index]
+    filme = movielist.pop(index)
     text_only = filme['title'].split(' (')[0]
     filme['img'] = get_poster_tmdb(text_only , filme['year'])
-    
-    del movielist[index]
-    return filme
+    return filme, movielist
 
 def ask(msg):
     res = ''
@@ -82,9 +80,9 @@ def ask(msg):
            
 def recomendar(movielist):
     while movielist: # enquanto houver filmes na lista
-        filme = getMovie(movielist)
+        filme, movielist = getMovie(movielist)
         if __name__ != "__main__":
-            return filme
+            return filme, movielist
         print(f"\nFilme: {filme['title']}\nAcesse:{filme['url']}\nPoster: {filme['img']}\n")
         if(ask("Você vai assistir esse filme? Se não vou te recomendar outro!")):
             print("Bom filme")

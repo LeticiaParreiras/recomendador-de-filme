@@ -1,14 +1,20 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="../static/favico.ico" type="image/x-icon">
+    <link rel="stylesheet" href="../static/style.css">
     <title>Recomendador de filme</title>
 </head>
 <body>
-    <h1>Recomendador de Filme</h1>
-    <button>Recomendar Filme aleatório</button>
-    <button onclick=watchlist()>Recomendar Filme da minha watchlist</button>
+    <main>
+        <h1>Recomendador de Filme</h1>
+        <p>Esta com duvida de qual filme assistir? Deixe que escolho por você!</p>
+        <h2>Quer que eu recomende filme da aonde?</h2>
+        <button onclick=random()>Filme Aleatório</button>
+        <button onclick=watchlist()> <span> <img src="../static/letterboxd-icon-2.png" alt="">Minha Watchlist</span></button>
+    </main>
 </body>
 </html>
 <script>
@@ -16,4 +22,7 @@
         const user = window.prompt("Atenção! Essa opção funciona apenas se: \n1.Você tiver uma conta no Letterboxd.\n2.Sua Watchlist estiver pública e com filmes adicionados. Informe seu user")
         window.location.href = `/watchlist/${user}`
     }
+    function random() {
+    window.location.href = "/random";
+  }
 </script>

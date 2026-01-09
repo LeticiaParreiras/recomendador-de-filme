@@ -7,15 +7,12 @@
     <link rel="stylesheet" href="../static/style.css">
 </head>
 <body>
-    <main>
-        <img id="poster" src="" alt="">
-        <a id="link" href="">
-            Sobre o filme
-        </a>
-        <h1 id="title"></h1>
-        <a id="link" target="_blank">Sobre o filme</a>
-        <button onclick="recommend(movielist)">Recomendar Filme</button>
-    </main>
+<main>
+    <img id="poster" src="" alt="">
+    <h1 id="title"></h1>
+    <a id="link" target="_blank">Sobre o filme</a>
+    <button onclick="recommend(movielist)">Recomendar Filme</button>
+</main>
 
 <script>
     let movielist = {{ movielist | tojson }};
@@ -35,7 +32,7 @@
             return response.json();
         })
         .then(data => {
-            if (data) {
+           if (data) {
                 if (data.filme.img){
                     document.getElementById('poster').src = data.filme.img;
                 }
@@ -51,6 +48,8 @@
         .catch(err => {
             console.error(err);
         });
+    }
+    recommend();
 </script>
 
 </body>
