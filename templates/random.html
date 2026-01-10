@@ -8,15 +8,22 @@
 </head>
 <body>
 <main>
+    <a id="back"onclick="goBack()"><img src= "../static/arrow_back.svg"></a>
     <img id="poster" src="" alt="">
     <h1 id="title"></h1>
     <a id="link" target="_blank">Sobre o filme</a>
-    <button onclick="recommend(movielist)">Recomendar Filme</button>
+    <button onclick="recommend()">Recomendar outro Filme</button>
 </main>
 
 <script>
     let movielist = {{ movielist | tojson }};
     function recommend (){
+        if (!movielist || movielist.length === 0) {
+            if( not confirm("Vários filmes ja foram recomendados. Deseja continuar com novas recomendações?")){
+                goBack();
+            }
+            return;
+        }
         fetch('/recommend', {
             method: 'POST',
             headers: {
@@ -49,7 +56,11 @@
             console.error(err);
         });
     }
+    function goBack() {
+        window.history.back();
+    }
     recommend();
+
 </script>
 
 </body>

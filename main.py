@@ -1,7 +1,7 @@
 from flask import Flask, render_template, jsonify, request, url_for
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
-from scripts import popularmovies, recomendar, getMovieList, getByWatchlist, getUrl
+from scripts import getMovie, getMovieList, getByWatchlist, getUrl
 
 app = Flask(__name__)
 
@@ -30,7 +30,7 @@ def recommend():
     data = request.get_json() 
     if not data or 'movielist' not in data:
         return jsonify({"mensagem": "Request movielist is empty"}), 400
-    filme,remaining = recomendar(data['movielist'])
+    filme,remaining = getMovie(data['movielist'])
     return jsonify({"filme": filme, "remaining": remaining}), 200
     
 @app.route('/random')

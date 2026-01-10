@@ -47,7 +47,7 @@ img{
     width: auto;
     border-radius: 4px;
 }
-a{
+#link{
     background-color: #fe8001;
     color: white;
     height: 40px;
@@ -63,8 +63,16 @@ a{
     justify-content: center;
     
 }
-a p{
-    font-size: 16px;
-    font-weight: bold;
-    text-align: center;
+#link:hover{
+    background-color: #cc6601;
+}
+a img{
+    height: 30px;
+    
+}
+#back{
+    align-self: start;
+    cursor: pointer;
+    text-align: left;
+    margin: 16px;
 }

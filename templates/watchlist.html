@@ -8,18 +8,23 @@
 </head>
 <body>
     <main>
+        <a id="back"onclick="goBack()"><img src= "../static/arrow_back.svg"></a>
         <img id="poster" src="" alt="">
-        <a id="link" href="">
-            Sobre o filme
-        </a>
         <h1 id="title"></h1>
         <a id="link" target="_blank">Sobre o filme</a>
-        <button onclick="recommend(movielist)">Recomendar Filme</button>
+        <button onclick="recommend()">Recomendar outro Filme</button>
     </main>
 
 <script>
     let movielist = {{ movielist | tojson }};
     function recommend (){
+        if (!movielist || movielist.length === 0) {
+            if (alert("Todos Filmes da sua Watchlist já foram recomendados! Deseja voltar para a página inicial?")){
+                goBack();
+
+            }
+            return;
+        }
         fetch('/recommend', {
             method: 'POST',
             headers: {
@@ -35,7 +40,7 @@
             return response.json();
         })
         .then(data => {
-            if (data) {
+           if (data) {
                 if (data.filme.img){
                     document.getElementById('poster').src = data.filme.img;
                 }
@@ -51,6 +56,8 @@
         .catch(err => {
             console.error(err);
         });
+    }
+    recommend();
 </script>
 
 </body>

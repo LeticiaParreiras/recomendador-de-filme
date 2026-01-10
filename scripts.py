@@ -68,8 +68,9 @@ def getUrl():
 def getMovie(movielist):
     index = random.randint(0, len(movielist) - 1)
     filme = movielist.pop(index)
-    text_only = filme['title'].split(' (')[0]
-    filme['img'] = get_poster_tmdb(text_only , filme['year'])
+    if __name__ != "__main__": # se não for execução via CLI
+        text_only = filme['title'].split(' (')[0]
+        filme['img'] = get_poster_tmdb(text_only , filme['year'])
     return filme, movielist
 
 def ask(msg):
@@ -78,21 +79,17 @@ def ask(msg):
         res = input(f"{msg}(Y/N)").upper()
     return res == 'Y' # retorna True se for Y, False se for N
            
-def recomendar(movielist):
+def cliRecomendar(movielist):
     while movielist: # enquanto houver filmes na lista
         filme, movielist = getMovie(movielist)
-        if __name__ != "__main__":
-            return filme, movielist
         print(f"\nFilme: {filme['title']}\nAcesse:{filme['url']}\nPoster: {filme['img']}\n")
         if(ask("Você vai assistir esse filme? Se não vou te recomendar outro!")):
             print("Bom filme")
             sys.exit() 
     
         
-def popularmovies ():
+def cliPopularmovies ():
     movielist = getMovieList(getUrl())
-    if __name__ != "__main__":
-        return movielist
     while True:
         if not movielist:
             if(ask("Ja te recomendei varios filmes, tem certeza que quer assistir filme? Se sim vou continuar te recomendando!")):
@@ -101,10 +98,10 @@ def popularmovies ():
                 print("Fica pra proxima!")
                 sys.exit() 
         else:
-            recomendar(movielist)
+            cliRecomendar(movielist)
         
     
-def watchlist ():
+def cliWatchlist ():
     print("Atenção! Essa opção funciona apenas se: \n1.Você tiver uma conta no Letterboxd.\n2.Sua Watchlist estiver pública e com filmes adicionados.")
     username = input('Informe o username: ').strip()
     movielist = getMovieList(getByWatchlist(username))
@@ -126,9 +123,9 @@ def menu():
     while res not in ['1', '2','3']:
         res=input("Escolha o número da opção: ")
     if(res == '1'):
-        popularmovies()
+        cliPopularmovies()
     elif(res == '2'):
-        watchlist()
+        cliWatchlist()
     elif(res == '3'):
         print('saindo...')
         sys.exit() 
