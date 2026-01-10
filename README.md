@@ -84,7 +84,7 @@ Contribuições são bem-vindas! Sinta-se livre para solicitar pull request ou a
 
 ## 📝 Licença
 
-Este projeto está licenciado sob a [MIT License](https://github.com/LeticiaParreiras/recomendador-de-filme/main/LINCENSE)
+Este projeto está licenciado sob a [MIT License](https://github.com/LeticiaParreiras/recomendador-de-filme/blob/main/LINCENSE)
 
 ## 👨‍💻 Autor
 
