@@ -18,6 +18,10 @@ def favicon():
 def home():
     return render_template("index.html")
 
+@app.route("/home")
+def home2():
+    return render_template("index.html")
+
 @app.route('/watchlist/<username>')
 def watchlist(username):
     movielist = getMovieList(getByWatchlist(username))
@@ -38,8 +42,8 @@ def recommend():
 def random():
     movieList = getMovieList(getUrl())
     if movieList:
-        return render_template("random.html", movielist=movieList)
-    return jsonify({"error": "erro in get list"}), 400
+        return render_template("random.html", movielist=movieList), 200
+    return render_template("erro.html", err= jsonify({"mensage": "erro in get list", "status": 500})), 500
 
 @app.errorhandler(429)
 def ratelimit_handler(e):
