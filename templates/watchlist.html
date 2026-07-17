@@ -12,7 +12,8 @@
         <a id="back" href="/home"><img src= "../static/arrow_back.svg"></a>
         <img id="poster" src="" alt="">
         <h1 id="title"></h1>
-        <a id="link" target="_blank">Sobre o filme</a>
+        <a id="link-tmbd" target="_blank" style="background-color: #02b4d7">Site TMDB</a>
+        <a id="link-letterboxd" target="_blank" style="background-color: #fe8001">Site Letterboxd</a>
         <button onclick="recommend()">Recomendar outro Filme</button>
     </main>
 
@@ -51,7 +52,9 @@
                 
                 document.getElementById('title').innerText = data.filme.title;
                 movielist = data.remaining;
-                document.getElementById('link').href = data.filme.url;
+                document.getElementById('link-tmbd').href = data.filme.url;
+
+                document.getElementById('link-letterboxd').href = data.filme.letterboxd;
             }
         })
         .catch(err => {

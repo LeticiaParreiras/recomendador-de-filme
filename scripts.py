@@ -25,9 +25,13 @@ def get_poster_tmdb(movie_title, year=None):
         data = response.json()
 
         if data.get("results"):
-            poster_path = data["results"][0].get("poster_path")
-            if poster_path:
-                return f"https://image.tmdb.org/t/p/w500{poster_path}"
+            movie_data = data["results"][0]
+            poster_path = movie_data.get("poster_path")
+            movie_id = movie_data.get("id")
+            if poster_path and movie_id:
+                poster_url = f"https://image.tmdb.org/t/p/w500{poster_path}"
+                tmdb_url = f"https://www.themoviedb.org/movie/{movie_id}"
+                return poster_url, tmdb_url
 
     except requests.exceptions.RequestException as e:
         print(f"Erro ao buscar poster no TMDB: {e}")
@@ -49,7 +53,8 @@ def getMovieList(url):
                 year = re.sub('[^0-9]', '', title)
                 movies.append({
                     "title": title,
-                    "url": url,
+                    "letterboxd": url,
+                    "url": "",
                     "year": year,
                     "img": "",
                 })
@@ -61,17 +66,43 @@ def getMovieList(url):
 def getByWatchlist(username):
     return f'https://letterboxd.com/{username}/watchlist/'
 
-def getUrl():
-    return f'https://letterboxd.com/films/ajax/page/{random.randint(0,5)}'
-
 
 def getMovie(movielist):
     index = random.randint(0, len(movielist) - 1)
     filme = movielist.pop(index)
     if __name__ != "__main__": # se não for execução via CLI
         text_only = filme['title'].split(' (')[0]
-        filme['img'] = get_poster_tmdb(text_only , filme['year'])
+        if filme['img'] == "" or filme['url'] == "":
+            filme['img'], filme['url'] = get_poster_tmdb(text_only , filme['year']) # type: ignore
     return filme, movielist
+
+def getTmdbList():
+    url = f'https://api.themoviedb.org/3/movie/top_rated?language=en-US&{random.randint(0,5)}'
+    API_KEY = os.getenv("TMDB_API_KEY")
+    try:
+        params = {
+        "api_key": API_KEY}
+        response = requests.get(url, params=params,timeout=10)
+        response.raise_for_status()  # valida erro HTTPs
+        data = response.json()
+        movies = []
+        for movie in data.get("results", []):
+            title = movie.get("title")
+            link = f"https://www.themoviedb.org/movie/{movie.get('id')}"
+            year = movie.get("release_date", "").split("-")[0]
+            poster_path = movie.get("poster_path")
+            img_url = f"https://image.tmdb.org/t/p/w500{poster_path}" if poster_path else None
+            if title and link:
+                movies.append({
+                    "title": title,
+                    "url": link,
+                    "year": year,
+                    "img": img_url,
+                })
+        return movies
+    except requests.exceptions.RequestException as e:
+        print(f"❌ Erro ao acessar {url}: {e}")
+        return []
 
 def ask(msg):
     res = ''
@@ -89,11 +120,11 @@ def cliRecomendar(movielist):
     
         
 def cliPopularmovies ():
-    movielist = getMovieList(getUrl())
+    movielist = getTmdbList()
     while True:
         if not movielist:
             if(ask("Ja te recomendei varios filmes, tem certeza que quer assistir filme? Se sim vou continuar te recomendando!")):
-                movielist = getMovieList(getUrl())
+                movielist = getTmdbList()
             else:
                 print("Fica pra proxima!")
                 sys.exit() 

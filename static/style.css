@@ -47,8 +47,7 @@ img{
     width: auto;
     border-radius: 4px;
 }
-#link{
-    background-color: #fe8001;
+a{
     color: white;
     height: 40px;
     width: 220px;
@@ -63,8 +62,8 @@ img{
     justify-content: center;
     
 }
-#link:hover{
-    background-color: #cc6601;
+a:hover{
+    opacity: 0.8;
 }
 a img{
     height: 30px;

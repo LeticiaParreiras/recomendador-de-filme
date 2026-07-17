@@ -1,7 +1,7 @@
 from flask import Flask, render_template, jsonify, request, url_for
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
-from scripts import getMovie, getMovieList, getByWatchlist, getUrl
+from scripts import getMovie, getMovieList, getByWatchlist, getTmdbList
 
 app = Flask(__name__)
 
@@ -23,6 +23,7 @@ def home2():
     return render_template("index.html")
 
 @app.route('/watchlist/<username>')
+@limiter.limit("15 per minute")
 def watchlist(username):
     movielist = getMovieList(getByWatchlist(username))
     if movielist:
@@ -30,6 +31,7 @@ def watchlist(username):
     return jsonify({"error": "Request body must be JSON"}), 400
 
 @app.route('/recommend', methods=['POST'])
+@limiter.limit("15 per minute")
 def recommend():
     data = request.get_json() 
     if not data or 'movielist' not in data:
@@ -38,9 +40,9 @@ def recommend():
     return jsonify({"filme": filme, "remaining": remaining}), 200
     
 @app.route('/random')
-@limiter.limit("5 per minute")
+@limiter.limit("15 per minute")
 def random():
-    movieList = getMovieList(getUrl())
+    movieList = getTmdbList()
     if movieList:
         return render_template("random.html", movielist=movieList), 200
     return render_template("erro.html", err= jsonify({"mensage": "erro in get list", "status": 500})), 500
